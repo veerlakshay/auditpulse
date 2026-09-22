@@ -1,0 +1,61 @@
+"use client"
+
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Loader2, ShieldAlert } from "lucide-react"
+import { supabase } from "@/lib/supabase"
+import { useState } from "react"
+
+const GithubIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" className={className} width="24" height="24">
+    <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.699-2.782.603-3.369-1.341-3.369-1.341-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.416 22 12c0-5.523-4.477-10-10-10z" />
+  </svg>
+)
+
+export default function LoginPage() {
+  const [loading, setLoading] = useState(false)
+
+  const handleLogin = async () => {
+    setLoading(true)
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'github',
+      options: {
+        redirectTo: `${location.origin}/auth/callback`,
+      },
+    })
+    
+    if (error) {
+      console.error(error)
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="flex h-screen w-screen items-center justify-center bg-background p-4 relative overflow-hidden">
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+      
+      <Card className="w-full max-w-sm relative z-10 border-muted">
+        <CardHeader className="space-y-1 flex flex-col items-center text-center">
+          <div className="bg-primary/10 p-3 rounded-full mb-2">
+            <ShieldAlert className="h-6 w-6 text-primary" />
+          </div>
+          <CardTitle className="text-2xl tracking-tight">AuditPulse</CardTitle>
+          <CardDescription>
+            Authenticate to access your API drift sentinels
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button 
+            className="w-full gap-2" 
+            variant="default"
+            onClick={handleLogin}
+            disabled={loading}
+          >
+            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <GithubIcon className="h-4 w-4" />}
+            Continue with GitHub
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}

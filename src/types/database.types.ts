@@ -12,16 +12,19 @@ export interface Database {
       projects: {
         Row: {
           id: string
+          user_id: string
           name: string
           created_at: string
         }
         Insert: {
           id?: string
+          user_id?: string
           name: string
           created_at?: string
         }
         Update: {
           id?: string
+          user_id?: string
           name?: string
           created_at?: string
         }
@@ -29,33 +32,45 @@ export interface Database {
       endpoints: {
         Row: {
           id: string
+          user_id: string
           project_id: string
+          name: string
           url: string
           method: string
           headers: Json | null
+          body: Json | null
           auth_token: string | null
+          webhook_url: string | null
           check_interval_minutes: number
           last_run_at: string | null
           created_at: string
         }
         Insert: {
           id?: string
+          user_id?: string
           project_id: string
+          name?: string
           url: string
           method?: string
           headers?: Json | null
+          body?: Json | null
           auth_token?: string | null
+          webhook_url?: string | null
           check_interval_minutes?: number
           last_run_at?: string | null
           created_at?: string
         }
         Update: {
           id?: string
+          user_id?: string
           project_id?: string
+          name?: string
           url?: string
           method?: string
           headers?: Json | null
+          body?: Json | null
           auth_token?: string | null
+          webhook_url?: string | null
           check_interval_minutes?: number
           last_run_at?: string | null
           created_at?: string

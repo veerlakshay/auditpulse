@@ -1,6 +1,7 @@
 -- projects table
 CREATE TABLE projects (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users(id),
   name TEXT NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -8,11 +9,15 @@ CREATE TABLE projects (
 -- endpoints table
 CREATE TABLE endpoints (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users(id),
   project_id UUID NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  name TEXT NOT NULL DEFAULT 'Untitled Endpoint',
   url TEXT NOT NULL,
   method TEXT NOT NULL DEFAULT 'GET',
   headers JSONB DEFAULT '{}'::jsonb,
+  body JSONB,
   auth_token TEXT,
+  webhook_url TEXT,
   check_interval_minutes INTEGER NOT NULL DEFAULT 5,
   last_run_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
